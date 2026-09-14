@@ -2,7 +2,7 @@
 const STORAGE_KEY_HISTORY = 'kddiQuizHistory_v1';
 const PROGRESS_KEY = 'kddiQuizProgress_v1';
 const MAX_HISTORY = 10;
-const CATEGORIES = ['スターリンク', 'WVS2', 'BGP'];
+const CATEGORIES = ['スターリンク', 'WVS2', 'BGP', 'VXLAN'];
 
 /* ================= Storage utilities ================= */
 function formatDateLabel(d) {
@@ -94,7 +94,7 @@ document.getElementById('catToggle').addEventListener('click', (e) => {
 function renderCountChips() {
   const pool = poolByCategory();
   const max = pool.length;
-  const steps = [10, 20, 30, 50];
+  const steps = [10, 20, 30, 50, 100];
   if (!steps.includes(max)) steps.push(max);
   const opts = steps.filter(n => n <= max).sort((a, b) => a - b);
   if (selectedCount > max) selectedCount = max;
