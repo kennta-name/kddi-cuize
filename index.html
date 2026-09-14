@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>スターリンク・WVS2・BGP 実践問題 | KDDIインフラエンジニア研修</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand" id="navBrand"><span class="nav-mark"></span>スターリンク・WVS2・BGP 実践問題</div>
+  <div class="nav-stat">全100問</div>
+</nav>
+
+<!-- ============ START SCREEN ============ -->
+<section class="screen active" id="screen-start">
+  <div class="hero">
+    <div class="hero-inner">
+      <svg class="orbit" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="100" cy="100" rx="90" ry="40" stroke="rgba(255,255,255,0.35)" stroke-width="1" fill="none" transform="rotate(-20 100 100)"/>
+        <ellipse cx="100" cy="100" rx="70" ry="30" stroke="rgba(255,255,255,0.2)" stroke-width="1" fill="none" transform="rotate(15 100 100)"/>
+        <circle cx="170" cy="70" r="3.5" fill="#ff5470"/>
+        <circle cx="40" cy="130" r="2.5" fill="#9fb2ff"/>
+      </svg>
+      <span class="eyebrow">KDDIインフラエンジニア研修・全100問</span>
+      <h1>電波が届きにくい現場でも、<br>知識は<span>確実に</span>つながる。</h1>
+      <p>スターリンク、KDDI Wide Area Virtual Switch 2 (WVS2)、BGPの重要用語を、四択問題でテンポよく身につけましょう。</p>
+      <div class="spec-row">
+        <div class="spec-chip">問題数 <b>全100問</b></div>
+        <div class="spec-chip">形式 <b>四択</b></div>
+        <div class="spec-chip">進捗 <b>自動保存</b></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="cat-toggle" id="catToggle">
+      <button type="button" class="cat-chip" data-cat="all">すべて</button>
+      <button type="button" class="cat-chip" data-cat="スターリンク">スターリンク</button>
+      <button type="button" class="cat-chip" data-cat="WVS2">WVS2</button>
+      <button type="button" class="cat-chip" data-cat="BGP">BGP</button>
+    </div>
+    <p class="cat-hint">出題する科目を選べます（未選択の場合はすべてから出題）</p>
+
+    <div class="cta-row" id="resumeArea" style="display:none; margin-bottom:28px;">
+      <button class="btn btn-resume" id="btnResume">前回の続きから再開する</button>
+    </div>
+
+    <div class="accordion-item open" id="accCount">
+      <button type="button" class="accordion-header" data-target="accCount">
+        出題数を選ぶ
+        <span class="accordion-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-body-inner">
+          <div class="count-chips" id="countChips"></div>
+          <p class="count-hint" id="countHint"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-row" style="margin-bottom:28px;">
+      <button class="btn btn-primary" id="btnStart">問題を開始</button>
+      <button class="btn btn-secondary" id="btnReviewWeak" style="display:none;">間違えた問題だけ復習する</button>
+    </div>
+
+    <div class="accordion-item" id="accStats">
+      <button type="button" class="accordion-header" data-target="accStats">
+        これまでの記録
+        <span class="accordion-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-body-inner" id="statsPanel" style="display:none;">
+          <div class="panel-grid">
+            <div class="panel-stat"><b id="statAttempts">0</b><span>挑戦回数</span></div>
+            <div class="panel-stat"><b id="statBest">0%</b><span>最高正答率</span></div>
+            <div class="panel-stat"><b id="statLast">0%</b><span>前回の正答率</span></div>
+          </div>
+          <div class="history-list" id="historyList"></div>
+        </div>
+        <div class="accordion-body-inner" id="statsEmpty" style="padding-top:0;">
+          <p class="count-hint">まだ記録がありません。問題を解くとここに表示されます。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ SCREEN ============ -->
+<section class="screen" id="screen-quiz">
+  <div class="wrap quiz-shell">
+    <div class="quiz-topbar">
+      <button class="btn btn-ghost small" id="btnHomeFromQuiz">← ホームに戻る</button>
+    </div>
+
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="quiz-meta">
+      <span>問題 <span class="count" id="qCount">1</span> / <span id="qTotal">20</span></span>
+      <span class="cat-badge" id="qCategory">分類</span>
+    </div>
+
+    <div class="question-card">
+      <p id="qPrompt">問題文がここに入ります</p>
+    </div>
+
+    <div class="choices" id="choices"></div>
+
+    <div class="answer-panel" id="answerPanel">
+      <div class="ap-verdict" id="apVerdict"></div>
+      <div class="ap-explain" id="apExplain"></div>
+    </div>
+
+    <div class="quiz-footer">
+      <button class="btn btn-primary" id="btnNext" disabled>次の問題へ</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESULT SCREEN ============ -->
+<section class="screen" id="screen-result">
+  <div class="result-hero">
+    <div class="score-ring" id="scoreRing">
+      <div class="pct" id="scorePct">0%</div>
+      <div class="sub" id="scoreFrac">0 / 0</div>
+    </div>
+    <h2 class="result-headline" id="resultHeadline">お疲れさまでした</h2>
+    <p class="result-sub" id="resultSub"></p>
+  </div>
+
+  <div class="wrap">
+    <div class="cat-breakdown" id="catBreakdown"></div>
+
+    <div class="review-section">
+      <h3>解答結果一覧</h3>
+      <div id="reviewList"></div>
+    </div>
+
+    <div class="result-actions">
+      <button class="btn btn-primary" id="btnRetryWrong">間違えた問題だけ再挑戦</button>
+      <button class="btn btn-secondary" id="btnRetryAll">最初からもう一度</button>
+      <button class="btn btn-ghost" id="btnHome">トップに戻る</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HISTORY DETAIL SCREEN ============ -->
+<section class="screen" id="screen-history-detail">
+  <div class="result-hero">
+    <div class="score-ring" id="hdScoreRing">
+      <div class="pct" id="hdScorePct">0%</div>
+      <div class="sub" id="hdScoreFrac">0 / 0</div>
+    </div>
+    <h2 class="result-headline" id="hdDate"></h2>
+  </div>
+
+  <div class="wrap">
+    <div class="cat-breakdown" id="hdCatBreakdown"></div>
+
+    <div class="review-section">
+      <h3>解答結果一覧</h3>
+      <div id="hdReviewList"></div>
+    </div>
+
+    <div class="result-actions">
+      <button class="btn btn-ghost" id="btnHistoryBack">トップに戻る</button>
+    </div>
+  </div>
+</section>
+
+<footer>KDDIインフラエンジニア研修・社内学習用クイズアプリ &middot; 出題数と科目はいつでも選び直せます</footer>
+
+<script src="js/questions.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
